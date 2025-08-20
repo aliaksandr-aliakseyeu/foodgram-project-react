@@ -1,115 +1,91 @@
-![statuspy workflow](https://github.com/Gollum959/foodgram-project-react/actions/workflows/cuisine_workflow.yml/badge.svg)
+# Foodgram — Recipe Sharing Platform (Legacy Learning Project, 2022)
 
+> **Legacy notice:** This is a **learning project built in 2022**. It uses an older tech stack and is preserved for portfolio/history. Not actively maintained.
 
-[**Description of the project**](#description-of-the-project)
+A simple platform where users publish recipes, subscribe to authors, add favorites, and download a consolidated shopping list for selected dishes.
 
-[**Filling the env file**](#filling-the-env-file)
+- **Owner:** @aliaksandr-aliakseyeu  
+- **Backend:** Django REST Framework  
+- **Frontend:** React (SPA)
 
-[**Commands to run an application in containers**](#commands-to-run-an-application-in-containers)
+---
 
-[**Command to fill in the database**](#command-to-fill-in-the-database)
+## Features
+- User registration and authentication (JWT/token login)
+- CRUD for recipes with ingredients and tags
+- Follow authors, manage favorites
+- Generate & download a shopping list for selected recipes
+- API-first backend (DRF); separate React SPA frontend
 
-[**Backend author**](#backend-author)
+---
 
-[**Backend technologies**](#backend-technologies)
+## Tech Stack (legacy)
+- **Python 3.7**, **Django 2.2.x**, **Django REST Framework 3.12.x**
+- **PostgreSQL**, **Gunicorn**
+- **Docker**, **Docker Compose**, **Nginx**
+- Notes: versions reflect 2019–2021 era of the curriculum
 
+---
 
-## Description of the project
+## Environment variables (`.env`)
 
-On this service, users will be able to publish recipes, subscribe to publications of other users, add their favorite recipes to the "Favorites" list, and before going to the store, download a summary list of products needed to prepare one or more selected dishes. 
+```dotenv
+# Django
+SECRET_KEY=replace_me
+DEBUG=False
+ALLOWED_HOSTS=localhost,127.0.0.1,web
 
-Frontend - React single page application.
-
-Backend - Django REST framework
-
-### Some examples of valid API requests
-
-**Registration and authorization of a new user**
-> POST |  [http://127.0.0.1:8000/api/users/](http://127.0.0.1:8000/api/users/)
-```
-{
-    "email":"email@email.com",
-    "username":"me",
-    "first_name": "first_name",
-    "last_name": "last_name",
-    "password": "password"
-}
-```
-
-Response samples
-> 201
-```
-{
-"email": "vpupkin@yandex.ru",
-"id": 0,
-"username": "vasya.pupkin",
-"first_name": "Вася",
-"last_name": "Пупкин"
-}
-> 200 OK
+# Database (PostgreSQL)
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432
 ```
 
->  POST |  [http://127.0.0.1:8000/api/auth/token/login/](http://127.0.0.1:8000/api/auth/token/login/)
+> Provide `.env.example` in the repo and **do not** commit your real `.env`.
+
+---
+
+## Quick Start (Docker)
+
+```bash
+# 1) clone
+git clone https://github.com/aliaksandr-aliakseyeu/foodgram-project-react.git
+cd foodgram-project-react
+
+# 2) environment
+cp .env.example .env
+
+# 3) build & run
+docker compose up -d --build
+# if your Docker uses v1 CLI, replace with: docker-compose up -d --build
+
+# 4) init database
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+docker compose exec web python manage.py collectstatic --no-input
+
+# 5) optional: load fixtures (adjust file name if your repo uses a different one)
+docker compose exec web python manage.py loaddata ingredients.json
+# or: ingredient.json
 ```
-{
-"password": "string",
-"email": "string"
-}
-```
-> 201 OK
-```
-{
-"auth_token": "string"
-}
-```
-**Getting a list of all recipes**
-> GET |  [http://127.0.0.1:8000/api/recipes/](http://127.0.0.1:8000/api/recipes/)
-> 200 OK
 
-After deploying the server on the local machine, you can see all api requests at [Redock](http://localhost/api/docs/)
+---
 
-## Filling the env file
+## API Docs
 
-**DB_ENGINE**=django.db.backends.postgresql  # indicate that we are working with postgresql
+- **ReDoc:** `http://localhost/api/docs/`
+- Sample endpoints:
+  - `POST /api/users/` — user registration  
+  - `POST /api/auth/token/login/` — obtain token  
+  - `GET /api/recipes/` — list recipes
 
-**DB_NAME**=postgres  # database name
+---
 
-**POSTGRES_USER**=postgres  # database login
+## Author
 
-**POSTGRES_PASSWORD**=postgres  # database password
-
-**DB_HOST**=db  # name of the service (container) 
-
-**DB_PORT**=5432  # port for connecting to the database
-
-**SECRET_KEY**=' ' # django Secret Key
-
-**DEBUG**= # True or False
-
-**ALLOWED_HOSTS**=[] # for example ['localhost', '127.0.0.1', 'web']
-
-## Commands to run an application in containers
-```
-docker-compose up -d
-docker-compose exec web python manage.py migrate 
-docker-compose exec web python manage.py createsuperuser 
-docker-compose exec web python manage.py collectstatic --no-input
-```
-## Command to fill in the database
-```
-docker-compose exec web python manage.py loaddata ingredient.json
-```
-## Backend author 
-[Aleksandr Alekseev](https://github.com/Gollum959/)
-
-## Backend technologies
-
-Project is created with:
-* Python 3.7
-* PostgreSQL
-* Django 2.2.16
-* Django REST framework 3.12.4
-* Docker version 20.10.12
-* Docker Compose version v2.11.0
-* Nginx/1.18.0 (Ubuntu)
-
+**Aliaksandr Aliakseyeu**  
+LinkedIn: https://www.linkedin.com/in/aliaksandr-alekseev  
+GitHub: https://github.com/aliaksandr-aliakseyeu
